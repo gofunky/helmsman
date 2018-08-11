@@ -26,7 +26,7 @@ RUN chmod +x /usr/local/bin/kubectl
 FROM alpine:3.7 
 RUN apk add --update --no-cache ca-certificates git
 
-ARG HELM_VERSION=v2.8.1
+ARG HELM_VERSION=v2.10.0-rc.3
 
 RUN apk --no-cache update \
     && rm -rf /var/cache/apk/* \
