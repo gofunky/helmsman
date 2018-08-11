@@ -34,7 +34,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https://192.168.99.100:8443",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -53,7 +53,7 @@ func Test_state_validate(t *testing.T) {
 				},
 				Settings: nil,
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -77,7 +77,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https://192.168.99.100:8443",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -98,7 +98,7 @@ func Test_state_validate(t *testing.T) {
 					"kubeContext": "minikube",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -122,7 +122,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https://192.168.99.100:8443",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -146,7 +146,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "$URI", // unset env
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -170,7 +170,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "$SET_URI", // set env var
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -194,7 +194,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https//192.168.99.100:8443", // invalid url
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -217,7 +217,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https://192.168.99.100:8443",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -238,7 +238,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https://192.168.99.100:8443",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -262,7 +262,7 @@ func Test_state_validate(t *testing.T) {
 					"clusterURI":  "https://192.168.99.100:8443",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -280,7 +280,7 @@ func Test_state_validate(t *testing.T) {
 					"kubeContext": "minikube",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -322,7 +322,7 @@ func Test_state_validate(t *testing.T) {
 			},
 			want: false,
 		}, {
-			name: "test case 15 -- helmRepos/nil_value",
+			name: "test case 15 -- helmRepos/empty_repo_value",
 			fields: fields{
 				Metadata:     make(map[string]string),
 				Certificates: nil,
@@ -330,37 +330,7 @@ func Test_state_validate(t *testing.T) {
 					"kubeContext": "minikube",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
-				},
-				HelmRepos: nil,
-				Apps:      make(map[string]*release),
-			},
-			want: false,
-		}, {
-			name: "test case 16 -- helmRepos/empty",
-			fields: fields{
-				Metadata:     make(map[string]string),
-				Certificates: nil,
-				Settings: map[string]string{
-					"kubeContext": "minikube",
-				},
-				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
-				},
-				HelmRepos: map[string]string{},
-				Apps:      make(map[string]*release),
-			},
-			want: false,
-		}, {
-			name: "test case 17 -- helmRepos/empty_repo_value",
-			fields: fields{
-				Metadata:     make(map[string]string),
-				Certificates: nil,
-				Settings: map[string]string{
-					"kubeContext": "minikube",
-				},
-				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",
@@ -370,7 +340,7 @@ func Test_state_validate(t *testing.T) {
 			},
 			want: false,
 		}, {
-			name: "test case 18 -- helmRepos/invalid_repo_value",
+			name: "test case 16 -- helmRepos/invalid_repo_value",
 			fields: fields{
 				Metadata:     make(map[string]string),
 				Certificates: nil,
@@ -378,7 +348,7 @@ func Test_state_validate(t *testing.T) {
 					"kubeContext": "minikube",
 				},
 				Namespaces: map[string]namespace{
-					"staging": namespace{false, false, "", "", "", "", "", ""},
+					"staging": {false, false, "", "", "", "", "", ""},
 				},
 				HelmRepos: map[string]string{
 					"stable": "https://kubernetes-charts.storage.googleapis.com",

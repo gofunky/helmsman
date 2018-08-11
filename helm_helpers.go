@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/Praqma/helmsman/gcs"
+	"io/ioutil"
+	"os"
 )
 
 var currentState map[string]releaseState
@@ -70,14 +72,14 @@ func buildState() {
 		r, _ := strconv.Atoi(strings.Fields(lines[i])[1])
 		t := strings.Fields(lines[i])[2] + " " + strings.Fields(lines[i])[3] + " " + strings.Fields(lines[i])[4] + " " +
 			strings.Fields(lines[i])[5] + " " + strings.Fields(lines[i])[6]
-		time, err := time.Parse("Mon Jan _2 15:04:05 2006", t)
+		parsedTime, err := time.Parse("Mon Jan _2 15:04:05 2006", t)
 		if err != nil {
 			log.Fatal("ERROR: while converting release time: " + err.Error())
 		}
 
 		currentState[strings.Fields(lines[i])[0]+"-"+strings.Fields(lines[i])[10]] = releaseState{
 			Revision:        r,
-			Updated:         time,
+			Updated:         parsedTime,
 			Status:          strings.Fields(lines[i])[7],
 			Chart:           strings.Fields(lines[i])[8],
 			Namespace:       strings.Fields(lines[i])[9],
@@ -204,18 +206,36 @@ func getNSTLSFlags(ns string) string {
 // validateReleaseCharts validates if the charts defined in a release are valid.
 // Valid charts are the ones that can be found in the defined repos.
 // This function uses Helm search to verify if the chart can be found or not.
+// For valid local paths, Helm creates a temporary package to check its validity.
 func validateReleaseCharts(apps map[string]*release) (bool, string) {
 
 	for app, r := range apps {
-		cmd := command{
-			Cmd:         "bash",
-			Args:        []string{"-c", "helm search " + r.Chart + " --version " + r.Version + " -l"},
-			Description: "validating if chart " + r.Chart + "-" + r.Version + " is available in the defined repos.",
-		}
+		if stat, err := os.Stat(r.Chart); err != nil || !stat.IsDir() {
+			cmd := command{
+				Cmd:         "bash",
+				Args:        []string{"-c", "helm search " + r.Chart + " --version " + r.Version + " -l"},
+				Description: "validating if chart " + r.Chart + "-" + r.Version + " is available in the defined repos.",
+			}
 
-		if exitCode, result := cmd.exec(debug, verbose); exitCode != 0 || strings.Contains(result, "No results found") {
-			return false, "ERROR: chart " + r.Chart + "-" + r.Version + " is specified for " +
-				"app [" + app + "] but is not found in the defined repos."
+			if exitCode, result := cmd.exec(debug, verbose); exitCode != 0 || strings.Contains(result, "No results found") {
+				return false, "ERROR: chart " + r.Chart + "-" + r.Version + " is specified for " +
+					"app [" + app + "] but is not found in the defined repos or the local file system."
+			}
+		} else {
+			tmpDir, err := ioutil.TempDir("", "helmsman")
+			if err != nil {
+				return false, "ERROR: the temp path for helm packaging could not be accessed."
+			}
+			cmd := command{
+				Cmd:         "bash",
+				Args:        []string{"-c", "helm package --destination " + tmpDir + " " + r.Chart + " --version " + r.Version + " -l"},
+				Description: "validating if chart " + r.Chart + "-" + r.Version + " is available at the defined path.",
+			}
+
+			if exitCode, result := cmd.exec(debug, verbose); exitCode != 0 || !strings.Contains(result, "Successfully packaged chart") {
+				return false, "ERROR: chart " + r.Chart + "-" + r.Version + " is specified for " +
+					"app [" + app + "] but the chart data is not valid."
+			}
 		}
 	}
 	return true, ""
