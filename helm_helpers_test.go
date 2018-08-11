@@ -3,6 +3,7 @@ package main
 import "testing"
 
 func Test_validateReleaseCharts(t *testing.T) {
+	addHelmRepos(map[string]string{"stable": "https://kubernetes-charts.storage.googleapis.com"})
 	type args struct {
 		apps map[string]*release
 	}

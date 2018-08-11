@@ -38,14 +38,4 @@ workflows:
   build-test-push-release:
     jobs:
       - build
-      - test:
-          requires:
-            - build       
-      - release:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master 
-            tags:
-              only: /^v.*/       
+      - test
