@@ -1,5 +1,5 @@
 #  This is a docker image for the helmsman test container
-#  It can be pulled from gofunky/helmsman-test
+#  It can be pulled from gofunky/helmsman:test
 FROM golang:1.10-alpine3.7 as builder
 
 ENV KUBE_LATEST_VERSION v1.8.2
