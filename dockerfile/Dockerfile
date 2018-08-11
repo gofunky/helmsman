@@ -1,4 +1,4 @@
-FROM golang:1.10 as builder
+FROM golang:1.10.3 as builder
 WORKDIR /go/src/
 RUN go get github.com/BurntSushi/toml
 RUN go get gopkg.in/yaml.v2
