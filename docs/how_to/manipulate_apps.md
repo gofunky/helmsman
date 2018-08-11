@@ -4,7 +4,7 @@ version: v1.3.0-rc
 
 # install releases 
 
-You can run helmsman with the [example.toml](https://github.com/Praqma/helmsman/blob/master/example.toml) or [example.yaml](https://github.com/Praqma/helmsman/blob/master/example.yaml) file.
+You can run helmsman with the [example.toml](https://github.com/gofunky/helmsman/blob/master/example.toml) or [example.yaml](https://github.com/gofunky/helmsman/blob/master/example.yaml) file.
 
 ``` 
 
@@ -62,7 +62,6 @@ If you would like the release to be deleted along with its history, you can use 
 > NOTE: purge deleting a release means you can't roll it back.
 
 ```toml
-...
 [apps]
 
     [apps.jenkins]
@@ -74,13 +73,10 @@ If you would like the release to be deleted along with its history, you can use 
     version = "0.9.1" 
     valuesFile = "" 
     purge = true # this means purge delete this release whenever it is required to be deleted 
-    test = flase
-
-...
+    test = false
 ``` 
 
 ```yaml
-...
 apps:
   jenkins:
     name: "jenkins"
@@ -91,9 +87,7 @@ apps:
     version: "0.9.1"
     valuesFile: ""
     purge: true # this means purge delete this release whenever it is required to be deleted
-    test: flase
-
-...
+    test: false
 ```
 
 # rollback releases 

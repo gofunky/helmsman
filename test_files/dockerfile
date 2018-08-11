@@ -1,5 +1,5 @@
 #  This is a docker image for the helmsman test container
-#  It can be pulled from praqma/helmsman-test
+#  It can be pulled from gofunky/helmsman-test
 FROM golang:1.10-alpine3.7 as builder
 
 ENV KUBE_LATEST_VERSION v1.8.2
@@ -20,4 +20,4 @@ RUN apk add --update --no-cache ca-certificates git \
 RUN go get github.com/BurntSushi/toml \ 
     && go get github.com/goreleaser/goreleaser 
 
-WORKDIR src/helmsman    
+WORKDIR src/helmsman

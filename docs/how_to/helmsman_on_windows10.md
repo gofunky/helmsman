@@ -12,6 +12,6 @@ If you have Windows 10 with Docker installed, you might be able to run Helmsman 
 2. Run the following command:
 
 ```
-docker run --rm -it -v <your kubectl config location>:/root/.kube -v <your dsf.toml directory>:/tmp  praqma/helmsman:v1.0.2 helmsman -f dsf.toml --debug --apply
+docker run --rm -it -v <your kubectl config location>:/root/.kube -v <your dsf.toml directory>:/tmp  gofunky/helmsman:v1.0.2 helmsman -f dsf.toml --debug --apply
 ```
 

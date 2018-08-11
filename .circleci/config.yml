@@ -5,65 +5,32 @@ version: 2
 jobs:
   build:
     docker:
-      - image: praqma/helmsman-test
+    - image: gofunky/helmsman-test
     steps:
       - checkout
       - run:
           name: Build helmsman
           command: |
             echo "fetching dependencies ..."
-            go get github.com/Praqma/helmsman/gcs 
-            go get github.com/Praqma/helmsman/aws
+            go get github.com/gofunky/helmsman/gcs
+            go get github.com/gofunky/helmsman/aws
             echo "building ..."
             TAG=$(git describe --abbrev=0 --tags)-$(date +"%d%m%y")
             go build -ldflags '-X main.version='$TAG' -extldflags "-static"'
   
   test:
-    docker: 
-      - image: praqma/helmsman-test
+    docker:
+    - image: gofunky/helmsman-test
     steps:
       - checkout 
       - run:
           name: Unit test helmsman  
           command: |
             echo "fetching dependencies ..."
-            go get github.com/Praqma/helmsman/gcs 
-            go get github.com/Praqma/helmsman/aws
+            go get github.com/gofunky/helmsman/gcs
+            go get github.com/gofunky/helmsman/aws
             echo "running tests ..."
             go test -v
-  release: 
-    docker: 
-      - image: praqma/helmsman-test
-    steps:
-      - checkout 
-      - run: 
-          name: Release helmsman
-          command: |
-            TAG_SHA=$(git rev-parse $(git describe --abbrev=0 --tags))
-            LAST_COMMIT=$(git rev-parse HEAD)
-            if [ "${TAG_SHA}" == "${LAST_COMMIT}" ]; then 
-              echo "fetching dependencies ..."
-              go get github.com/Praqma/helmsman/gcs 
-              go get github.com/Praqma/helmsman/aws
-              echo "releasing ..."
-              goreleaser --release-notes release-notes.md 
-            else 
-              echo "No release is needed yet."
-              exit 0
-            fi    
-     
-      # - setup_remote_docker
-      # - run:
-      #     name: build docker images and push them to dockerhub
-      #     command: |
-      #       TAG=$(git describe --abbrev=0 --tags)
-      #       docker login -u $DOCKER_USER -p $DOCKERHUB
-      #       docker build -t praqma/helmsman:$TAG-helm-v2.8.1 --build-arg HELM_VERSION=v2.8.1 dockerfile/.
-      #       docker push praqma/helmsman:$TAG-helm-v2.8.1
-      #       docker build -t praqma/helmsman:$TAG-helm-v2.8.0 --build-arg HELM_VERSION=v2.8.0 dockerfile/.
-      #       docker push praqma/helmsman:$TAG-helm-v2.8.0
-      #       docker build -t praqma/helmsman:$TAG-helm-v2.7.2 --build-arg HELM_VERSION=v2.7.2 dockerfile/.
-      #       docker push praqma/helmsman:$TAG-helm-v2.7.2
 
                 
 workflows:

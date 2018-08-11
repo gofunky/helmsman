@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Praqma/helmsman/gcs"
+	"github.com/gofunky/helmsman/gcs"
 	"io/ioutil"
 	"os"
 )
@@ -58,7 +58,7 @@ func getTillerReleases(tillerNS string) string {
 	return strings.Join(lines, "\n")
 }
 
-// buildState builds the currentState map contianing information about all releases existing in a k8s cluster
+// buildState builds the currentState map containing information about all releases existing in a k8s cluster
 func buildState() {
 	log.Println("INFO: mapping the current helm state ...")
 	currentState = make(map[string]releaseState)
@@ -86,47 +86,6 @@ func buildState() {
 			TillerNamespace: strings.Fields(lines[i])[10],
 		}
 	}
-}
-
-// Deprecated: listReleases lists releases in a given namespace and with a given status
-func listReleases(namespace string, scope string) string {
-	var options string
-	if scope == "all" {
-		options = "--all -q"
-	} else if scope == "deleted" {
-		options = "--deleted -q"
-	} else if scope == "deployed" && namespace != "" {
-		options = "--deployed -q --namespace " + namespace
-	} else if scope == "deployed" && namespace == "" {
-		options = "--deployed -q "
-	} else if scope == "failed" {
-		options = "--failed -q"
-	} else {
-		options = "--all -q"
-		log.Println("INFO: scope " + scope + " is not valid, using [ all ] instead!")
-	}
-
-	ns := namespace
-	tls := ""
-	if namespace == "" {
-		ns = "all"
-		tls = getNSTLSFlags("kube-system")
-	} else {
-		tls = getNSTLSFlags(namespace)
-	}
-
-	cmd := command{
-		Cmd:         "bash",
-		Args:        []string{"-c", "helm list " + options + tls},
-		Description: "listing the existing releases in namespace [ " + ns + " ] with status [ " + scope + " ]",
-	}
-
-	exitCode, result := cmd.exec(debug, verbose)
-	if exitCode != 0 {
-		log.Fatal("ERROR: failed to list " + scope + " releases in " + ns + " namespace(s): " + result)
-	}
-
-	return result
 }
 
 // helmRealseExists checks if a Helm release is/was deployed in a k8s cluster.
@@ -171,26 +130,6 @@ func getReleaseChartVersion(rs releaseState) string {
 	chart := rs.Chart
 	runes := []rune(chart)
 	return string(runes[strings.LastIndexByte(chart, '-')+1 : len(chart)])
-}
-
-// DEPRECATED
-// getReleaseStatus returns the output of Helm status command for a release.
-// if the release does not exist, it returns an empty string without breaking the program execution.
-func getReleaseStatus(releaseName string) string {
-	cmd := command{
-		Cmd:         "bash",
-		Args:        []string{"-c", "helm status " + releaseName + getNSTLSFlags("kube-system")},
-		Description: "inspecting the status of release:  " + releaseName,
-	}
-
-	exitCode, result := cmd.exec(debug, verbose)
-	if exitCode == 0 {
-		return result
-	}
-
-	log.Fatal("ERROR: while checking release [ " + releaseName + " ] status: " + result)
-
-	return ""
 }
 
 // getNSTLSFlags returns TLS flags for a given namespace if it's deployed with TLS

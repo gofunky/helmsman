@@ -1,6 +1,6 @@
 *.passwd
-*.key
-*.crt
 /dist
 *.world
 *.world1
+/vendor/
+/.idea/

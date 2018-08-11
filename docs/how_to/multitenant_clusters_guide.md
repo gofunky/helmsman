@@ -95,7 +95,7 @@ namespaces:
     tillerServiceAccount: "dev2-sa"
 
 ```
-> Currently, Helmsman does not create the service accounts and expects them to be available in the namespace before hand. This should be fixed in upcoming releases and you can track it in [this issue](https://github.com/Praqma/helmsman/issues/48)
+> Currently, Helmsman does not create the service accounts and expects them to be available in the namespace before hand. This should be fixed in upcoming releases and you can track it in [this issue](https://github.com/gofunky/helmsman/issues/48)
 
 > If you don't specify `tillerServiceAccount` option for a namespace, it will try to use the service account you defined in your settings section (`default-tiller-sa` in the example above)
 

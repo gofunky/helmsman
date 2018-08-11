@@ -7,10 +7,10 @@ Pull requests, feeback/feature requests are all welcome. This guide will be upda
 To build helmsman from source, you need go:1.9+.  Follow the steps below:
 
 ```
-git clone https://github.com/Praqma/helmsman.git
+git clone https://github.com/gofunky/helmsman.git
 go get github.com/BurntSushi/toml
-go get github.com/Praqma/helmsman/gcs 
-go get github.com/Praqma/helmsman/aws
+go get github.com/gofunky/helmsman/gcs 
+go get github.com/gofunky/helmsman/aws
 TAG=$(git describe --abbrev=0 --tags)-$(date +"%s")
 go build -ldflags '-X main.version='$TAG' -extldflags "-static"'
 ```

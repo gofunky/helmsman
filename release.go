@@ -27,7 +27,7 @@ type release struct {
 }
 
 // validateRelease validates if a release inside a desired state meets the specifications or not.
-// check the full specification @ https://github.com/Praqma/helmsman/docs/desired_state_spec.md
+// check the full specification @ https://github.com/gofunky/helmsman/docs/desired_state_spec.md
 func validateRelease(appLabel string, r *release, names map[string]map[string]bool, s state) (bool, string) {
 	_, err := os.Stat(r.ValuesFile)
 	if r.Name == "" {

@@ -13,7 +13,7 @@ func makePlan(s *state) *plan {
 	buildState()
 
 	for _, r := range s.Apps {
-		decide(r, s)
+		decide(r)
 	}
 
 	return &outcome
@@ -21,7 +21,7 @@ func makePlan(s *state) *plan {
 
 // decide makes a decision about what commands (actions) need to be executed
 // to make a release section of the desired state come true.
-func decide(r *release, s *state) {
+func decide(r *release) {
 
 	// check for deletion
 	if !r.Enabled {
@@ -133,7 +133,7 @@ func rollbackRelease(r *release, rs releaseState) {
 		logDecision("DECISION: release [ "+r.Name+" ] is deleted BUT from namespace [[ "+rs.Namespace+
 			" ]]. Will purge delete it from there and install it in namespace [[ "+r.Namespace+" ]]", r.Priority)
 		logDecision("WARNING: rolling back release [ "+r.Name+" ] from [[ "+rs.Namespace+" ]] to [[ "+r.Namespace+
-			" ]] might not correctly connect to existing volumes. Check https://github.com/Praqma/helmsman/blob/master/docs/how_to/move_charts_across_namespaces.md"+
+			" ]] might not correctly connect to existing volumes. Check https://github.com/gofunky/helmsman/blob/master/docs/how_to/move_charts_across_namespaces.md"+
 			" for details if this release uses PV and PVC.", r.Priority)
 
 	}
@@ -189,7 +189,7 @@ func inspectUpgradeScenario(r *release, rs releaseState) {
 			" ]]. I am planning a purge delete of the current release from namespace [[ "+rs.Namespace+" ]] "+
 			"and will install it for you in namespace [[ "+r.Namespace+" ]]", r.Priority)
 		logDecision("WARNING: moving release [ "+r.Name+" ] from [[ "+rs.Namespace+" ]] to [[ "+r.Namespace+
-			" ]] might not correctly connect to existing volumes. Check https://github.com/Praqma/helmsman/blob/master/docs/how_to/move_charts_across_namespaces.md"+
+			" ]] might not correctly connect to existing volumes. Check https://github.com/gofunky/helmsman/blob/master/docs/how_to/move_charts_across_namespaces.md"+
 			" for details if this release uses PV and PVC.", r.Priority)
 	}
 }
