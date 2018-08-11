@@ -23,7 +23,7 @@ RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_LAT
 RUN chmod +x /usr/local/bin/kubectl 
 
 # The image to keep
-FROM alpine:3.7 
+FROM alpine:3.8 
 RUN apk add --update --no-cache ca-certificates git
 
 ARG HELM_VERSION=v2.10.0-rc.3
