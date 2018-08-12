@@ -2,7 +2,8 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/gofunky/helmsman)](https://goreportcard.com/report/github.com/gofunky/helmsman)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5cb4f4fd3bb54fd99f1076bb686d3d8e)](https://www.codacy.com/app/gofunky/helmsman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gofunky/helmsman&amp;utm_campaign=Badge_Grade)
-
+[![CircleCI](https://circleci.com/gh/gofunky/helmsman.svg?style=svg)](https://circleci.com/gh/gofunky/helmsman)
+[![](https://images.microbadger.com/badges/image/gofunky/helmsman.svg)](https://microbadger.com/images/gofunky/helmsman "Get your own image badge on microbadger.com")
 
 # What is Helmsman?
 
