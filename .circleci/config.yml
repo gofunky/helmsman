@@ -29,6 +29,7 @@ jobs:
             echo "fetching dependencies ..."
             go get github.com/gofunky/helmsman/gcs
             go get github.com/gofunky/helmsman/aws
+            helm init --client-only
             echo "running tests ..."
             go test -v
 
