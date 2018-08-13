@@ -29,6 +29,8 @@ jobs:
             echo "fetching dependencies ..."
             go get github.com/Praqma/helmsman/gcs 
             go get github.com/Praqma/helmsman/aws
+            echo "init Helm..."
+            helm init --client-only
             echo "running tests ..."
             go test -v
   release: 
