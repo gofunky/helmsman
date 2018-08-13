@@ -42,8 +42,6 @@ func main() {
 		}
 	}
 
-	waitForTiller("kube-system")
-
 	if verbose {
 		logVersions()
 	}
