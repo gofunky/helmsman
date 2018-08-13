@@ -22,7 +22,7 @@ func Test_validateReleaseCharts(t *testing.T) {
 			want: true,
 		}, {
 			name: "Valid local Helm chart",
-			args: args{apps: map[string]*release{"examplechart": {
+			args: args{apps: map[string]*release{"example_chart": {
 				Name:    "example_chart",
 				Chart:   "./test_files/example_chart",
 				Version: "0.1.0",
