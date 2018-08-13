@@ -318,20 +318,7 @@ func deployTiller(namespace string, serviceAccount string, defaultServiceAccount
 // initHelm initializes helm on a k8s cluster and deploys Tiller in one or more namespaces
 func initHelm() (bool, string) {
 
-	defaultSA := ""
-	if value, ok := s.Settings["serviceAccount"]; ok {
-		defaultSA = value
-	}
-
-	if v, ok := s.Namespaces["kube-system"]; ok {
-		if ok, err := deployTiller("kube-system", v.TillerServiceAccount, defaultSA); !ok {
-			return false, err
-		}
-	} else {
-		if ok, err := deployTiller("kube-system", "", defaultSA); !ok {
-			return false, err
-		}
-	}
+	defaultSA := s.Settings["serviceAccount"]
 
 	for k, ns := range s.Namespaces {
 		if ns.InstallTiller && k != "kube-system" {
