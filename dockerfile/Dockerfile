@@ -1,3 +1,5 @@
+FROM gofunky/kubernetes:v1.11.2 as kube
+
 FROM golang:1.10.3 as builder
 WORKDIR /go/src/
 RUN go get github.com/BurntSushi/toml
@@ -12,15 +14,7 @@ RUN cd helmsman \
     && LT_SHA=$(git rev-parse ${LastTag}^{}) \
     && LC_SHA=$(git rev-parse HEAD) \
     && if [ ${LT_SHA} != ${LC_SHA} ]; then TAG=latest-$(date +"%d%m%y"); fi \
-    && CGO_ENABLED=0 GOOS=linux go install -a -ldflags '-X main.version='$TAG' -extldflags "-static"' . 
-
-FROM alpine:3.6 as kube
-ENV KUBE_LATEST_VERSION="v1.10.0"
-
-RUN apk add --update ca-certificates 
-RUN apk add --update -t deps curl 
-RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl 
-RUN chmod +x /usr/local/bin/kubectl 
+    && CGO_ENABLED=0 GOOS=linux go install -a -ldflags '-X main.version='$TAG' -extldflags "-static"' .
 
 # The image to keep
 FROM alpine:3.8 
@@ -39,7 +33,7 @@ RUN apk --no-cache update \
     && helm plugin install https://github.com/nouney/helm-gcs \
     && rm -rf /tmp/linux-amd64
 
-COPY --from=kube /usr/local/bin/kubectl /bin/kubectl
+COPY --from=kube /usr/local/bin/kubectl /usr/local/bin/kubectl
 COPY --from=builder /go/bin/helmsman   /bin/helmsman
 
 WORKDIR /tmp

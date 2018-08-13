@@ -1,14 +1,12 @@
 #  This is a docker image for the helmsman test container
 #  It can be pulled from gofunky/helmsman:test
+FROM gofunky/kubernetes:v1.11.2 as kube
+
 FROM golang:1.10.3-alpine3.7 as builder
 
-ENV KUBE_LATEST_VERSION v1.11.0
-ENV HELM_VERSION v2.10.0-rc.3
+ARG HELM_VERSION=v2.10.0-rc.3
 
-RUN apk add --update ca-certificates \
-    && apk add --update -t deps curl \
-    && curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_LATEST_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
-    && chmod +x /usr/local/bin/kubectl 
+COPY --from=kube /usr/local/bin/kubectl /usr/local/bin/kubectl
 
 RUN apk add --update --no-cache ca-certificates git \
     && apk add --update -t deps curl tar gzip make bash \
