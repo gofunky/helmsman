@@ -167,13 +167,13 @@ func validateReleaseCharts(apps map[string]*release) (bool, string) {
 			}
 			cmd := command{
 				Cmd:         "bash",
-				Args:        []string{"-c", "helm package --destination " + tmpDir + " " + r.Chart + " --version " + r.Version + " -l"},
+				Args:        []string{"-c", "helm package --destination " + tmpDir + " " + r.Chart + " --version " + r.Version},
 				Description: "validating if chart " + r.Chart + "-" + r.Version + " is available at the defined path.",
 			}
 
 			if exitCode, result := cmd.exec(debug, verbose); exitCode != 0 || !strings.Contains(result, "Successfully packaged chart") {
 				return false, "ERROR: chart " + r.Chart + "-" + r.Version + " is specified for " +
-					"app [" + app + "] but the chart data is not valid."
+					"app [" + app + "] but the chart data is not valid. " + result
 			}
 		}
 	}
