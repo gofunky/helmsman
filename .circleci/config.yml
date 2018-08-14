@@ -65,8 +65,8 @@ jobs:
     - run:
         command: |
           sudo chmod +x ~/app/helmsman
-          ./helmsman
-          sudo ~/app/helmsman -apply -f ~/app/helmsman/test_files/example_chart/test.toml
+          ~/app/helmsman
+          sudo ~/app/helmsman -apply -f ~/app/test_files/example_chart/test.toml
     - run:
         command: |
           sudo kubectl get deployment
