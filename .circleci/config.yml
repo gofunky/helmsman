@@ -15,13 +15,12 @@ jobs:
             go get github.com/gofunky/helmsman/gcs
             go get github.com/gofunky/helmsman/aws
             echo "building ..."
-            mkdir -pv build
             TAG=$(git describe --abbrev=0 --tags)-$(date +"%d%m%y")
-            go build -ldflags '-X main.version='$TAG' -extldflags "-static"' -o build/helmsman
+            go build -ldflags '-X main.version='$TAG' -extldflags "-static"' -o helmsman .
       - persist_to_workspace:
           root: .
           paths:
-          - build/*
+          - helmsman
   
   test:
     docker:
@@ -38,6 +37,7 @@ jobs:
             helm init --client-only
             echo "running tests ..."
             go test -v
+
   kube-test:
     machine: true
     environment:
@@ -65,8 +65,8 @@ jobs:
           JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until sudo kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
     - run:
         command: |
-          sudo chmod +x ./build/helmsman
-          sudo ./build/helmsman -apply -f test_files/example_chart/test.toml
+          sudo chmod +x helmsman
+          sudo ./helmsman -apply -f test_files/example_chart/test.toml
     - run:
         command: |
           sudo kubectl get deployment
