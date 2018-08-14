@@ -22,10 +22,25 @@ func Test_validateReleaseCharts(t *testing.T) {
 			want: true,
 		}, {
 			name: "Valid local Helm chart",
-			args: args{apps: map[string]*release{"test-nginx": {
-				Name:    "test-nginx",
-				Chart:   "./test_files/test-nginx",
+			args: args{apps: map[string]*release{"nginx": {
+				Name:    "nginx",
+				Chart:   "test_files/example_chart",
 				Version: "0.1.0",
+			}}},
+			want: true,
+		}, {
+			name: "Check invalid version",
+			args: args{apps: map[string]*release{"nginx": {
+				Name:    "nginx",
+				Chart:   "test_files/example_chart",
+				Version: "0.0.0",
+			}}},
+			wantErr: true,
+		}, {
+			name: "Ignore empty version",
+			args: args{apps: map[string]*release{"nginx": {
+				Name:  "nginx",
+				Chart: "test_files/example_chart",
 			}}},
 			want: true,
 		}, {

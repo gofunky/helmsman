@@ -12,8 +12,7 @@ jobs:
           name: Build helmsman
           command: |
             echo "fetching dependencies ..."
-            go get github.com/gofunky/helmsman/gcs
-            go get github.com/gofunky/helmsman/aws
+            go get -t -d -v ./...
             echo "building ..."
             TAG=$(git describe --abbrev=0 --tags)-$(date +"%d%m%y")
             go build -ldflags '-X main.version='$TAG' -extldflags "-static"' -o helmsman .
@@ -31,8 +30,7 @@ jobs:
           name: Unit test helmsman  
           command: |
             echo "fetching dependencies ..."
-            go get github.com/gofunky/helmsman/gcs
-            go get github.com/gofunky/helmsman/aws
+            go get -t -d -v ./...
             echo "init Helm..."
             helm init --client-only
             echo "running tests ..."
