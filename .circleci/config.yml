@@ -65,6 +65,7 @@ jobs:
     - run:
         command: |
           sudo chmod +x ~/app/helmsman
+          ./helmsman
           sudo ~/app/helmsman -apply -f ~/app/helmsman/test_files/example_chart/test.toml
     - run:
         command: |
