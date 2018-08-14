@@ -6,17 +6,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gofunky/helmsman/gcs"
 	"errors"
 	"github.com/gofunky/copy"
+	"github.com/gofunky/helmsman/gcs"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"log"
 	"os"
 	"path/filepath"
-	"strconv"
-	"strings"
-	"time"
 )
 
 var currentState map[string]releaseState
