@@ -4,3 +4,4 @@
 /dist
 *.world
 *.world1
+tmp/

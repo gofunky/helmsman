@@ -1,15 +1,17 @@
 package main
 
 import (
+	"errors"
+	"github.com/Praqma/helmsman/gcs"
+	"github.com/gofunky/copy"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"log"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/Praqma/helmsman/gcs"
-	"io/ioutil"
-	"os"
-	"path/filepath"
 )
 
 var currentState map[string]releaseState
@@ -223,27 +225,71 @@ func validateReleaseCharts(apps map[string]*release) (bool, string) {
 					"app [" + app + "] but is not found in the defined repos or the local file system."
 			}
 		} else {
-			// Use absolute path to circumvent https://github.com/helm/helm/issues/1979
-			if r.Chart, err = filepath.Abs(r.Chart); err != nil {
-				return false, "ERROR: the absolute path to the specified helm chart could not be determined."
-			}
-			tmpDir, err := ioutil.TempDir("", "helmsman")
+			destDir, err := forkChart(r)
 			if err != nil {
-				return false, "ERROR: the temp path for helm packaging could not be accessed."
+				return false, err.Error()
 			}
 			cmd := command{
 				Cmd:         "bash",
-				Args:        []string{"-c", "helm package --destination " + tmpDir + " " + r.Chart + " --version " + r.Version},
-				Description: "validating if chart " + r.Chart + "-" + r.Version + " is available at the defined path.",
+				Args:        []string{"-c", "helm package --destination " + destDir + " " + r.Chart},
+				Description: "validating if chart " + r.Chart + " is available at the defined path.",
 			}
 
 			if exitCode, result := cmd.exec(debug, verbose); exitCode != 0 || !strings.Contains(result, "Successfully packaged chart") {
-				return false, "ERROR: chart " + r.Chart + "-" + r.Version + " is specified for " +
+				return false, "ERROR: chart " + r.Chart + " is specified for " +
 					"app [" + app + "] but the chart data is not valid. " + result
 			}
 		}
 	}
 	return true, ""
+}
+
+// forkChart makes a copy of the given release chart, updates the release's chart path and version,
+// and returns the containing temporary folder.
+func forkChart(r *release) (string, error) {
+	// Read chart meta
+	chart, err := getChartDef(r.Chart)
+	if err != nil {
+		return "", errors.New("ERROR: the specified local helm chart is not valid.")
+	}
+	// Check chart version
+	if r.Version != "" && r.Version != chart.Version {
+		return "", errors.New("ERROR: the helm chart version does not match the specified helmsman app version.")
+	}
+	r.Version = chart.Version
+	// Create temporary directory for chart package
+	tmpDir, err := ioutil.TempDir("", "helmsman")
+	if err != nil {
+		return "", errors.New("ERROR: the temp path for helm packaging could not be accessed.")
+	}
+	// Use absolute path to a copy of the chart to circumvent https://github.com/helm/helm/issues/1979
+	newChartPath := filepath.Join(tmpDir, chart.Name)
+	err = copy.Copy(r.Chart, newChartPath)
+	if r.Chart, err = filepath.Abs(newChartPath); err != nil {
+		return "", errors.New("ERROR: the absolute path to the specified helm chart could not be determined.")
+	}
+	return tmpDir, nil
+}
+
+// chart type represents the fields of a Chart.yaml
+type chartDef struct {
+	Name    string `yaml:"name"`
+	Version string `yaml:"version"`
+}
+
+// getChartDef reads and parses the helm chart in the given path
+func getChartDef(path string) (*chartDef, error) {
+	yamlFile, err := ioutil.ReadFile(filepath.Join(path, "Chart.yaml"))
+	if err != nil {
+		return nil, err
+	}
+	var chart chartDef
+	err = yaml.Unmarshal(yamlFile, &chart)
+	if err != nil {
+		return nil, err
+	}
+
+	return &chart, nil
 }
 
 // waitForTiller keeps checking if the helm Tiller is ready or not by executing helm list and checking its error (if any)
