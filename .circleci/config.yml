@@ -40,6 +40,7 @@ jobs:
 
   kube-test:
     machine: true
+    workDir: ~/app
     environment:
       CHANGE_MINIKUBE_NONE_USER: true
       K8S_VERSION: v1.10.0
@@ -66,8 +67,7 @@ jobs:
     - run:
         command: |
           sudo chmod +x helmsman
-          ls
-          sudo ./helmsman -apply -f test_files/example_chart/test.toml
+          sudo ~/app/helmsman -apply -f test_files/example_chart/test.toml
     - run:
         command: |
           sudo kubectl get deployment
