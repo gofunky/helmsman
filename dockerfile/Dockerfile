@@ -34,7 +34,7 @@ RUN apk --no-cache update \
     && rm -rf /tmp/linux-amd64
 
 COPY --from=kube /usr/local/bin/kubectl /usr/local/bin/kubectl
-COPY --from=builder /go/bin/helmsman   /bin/helmsman
+COPY --from=builder /go/bin/helmsman   /usr/local/bin/helmsman
 
 WORKDIR /tmp
 # ENTRYPOINT ["/bin/helmsman"]
