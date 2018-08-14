@@ -9,6 +9,7 @@ import (
 	"github.com/Praqma/helmsman/gcs"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
 var currentState map[string]releaseState
@@ -222,6 +223,10 @@ func validateReleaseCharts(apps map[string]*release) (bool, string) {
 					"app [" + app + "] but is not found in the defined repos or the local file system."
 			}
 		} else {
+			// Use absolute path to circumvent https://github.com/helm/helm/issues/1979
+			if r.Chart, err = filepath.Abs(r.Chart); err != nil {
+				return false, "ERROR: the absolute path to the specified helm chart could not be determined."
+			}
 			tmpDir, err := ioutil.TempDir("", "helmsman")
 			if err != nil {
 				return false, "ERROR: the temp path for helm packaging could not be accessed."
