@@ -17,9 +17,9 @@ jobs:
             TAG=$(git describe --abbrev=0 --tags)-$(date +"%d%m%y")
             go build -ldflags '-X main.version='$TAG' -extldflags "-static"' -o helmsman .
       - save_cache:
-        key: bin-{{ checksum "Gopkg.lock" }}-{{ checksum "helmsman" }}
-        paths:
-        - helmsman
+          key: bin-{{ checksum "Gopkg.lock" }}-{{ checksum "helmsman" }}
+          paths:
+          - helmsman
   
   test:
     docker:
