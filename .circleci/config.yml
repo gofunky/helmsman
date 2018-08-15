@@ -16,6 +16,9 @@ jobs:
             echo "building ..."
             TAG=$(git describe --abbrev=0 --tags)-$(date +"%d%m%y")
             go build -ldflags '-X main.version='$TAG' -extldflags "-static"' -o helmsman .
+      - run:
+          name: Make helmsman executable
+          command: chmod +x helmsman
       - save_cache:
           key: bin-{{ checksum "Gopkg.lock" }}-{{ checksum "helmsman" }}
           paths:
@@ -64,9 +67,9 @@ jobs:
         key: bin-{{ checksum "Gopkg.lock" }}-
     - run:
         command: |
-          sudo chmod +x ./helmsman
+          sudo chmod +x helmsman
           ./helmsman
-          sudo ./helmsman -apply -f ./test_files/example_chart/test.toml
+          sudo ./helmsman -apply -f test_files/example_chart/test.toml
     - run:
         command: |
           sudo kubectl get deployment
