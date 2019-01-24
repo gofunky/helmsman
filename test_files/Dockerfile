@@ -2,7 +2,7 @@
 #  It can be pulled from gofunky/helmsman:test
 FROM gofunky/kubernetes:v1.11.2 as kube
 
-FROM golang:1.10.3-alpine3.7 as builder
+FROM golang:1.11.5-alpine3.7 as builder
 
 ARG HELM_VERSION=v2.10.0-rc.3
 
