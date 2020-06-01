@@ -17,7 +17,7 @@ RUN cd helmsman \
     && CGO_ENABLED=0 GOOS=linux go install -a -ldflags '-X main.version='$TAG' -extldflags "-static"' .
 
 # The image to keep
-FROM alpine:3.8 
+FROM alpine:3.12.0 
 RUN apk add --update --no-cache ca-certificates git
 
 ARG HELM_VERSION=v2.10.0-rc.3
