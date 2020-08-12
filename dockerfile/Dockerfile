@@ -1,6 +1,6 @@
 FROM gofunky/kubernetes:v1.11.2 as kube
 
-FROM golang:1.10.3 as builder
+FROM golang:1.15.0 as builder
 WORKDIR /go/src/
 RUN go get github.com/BurntSushi/toml
 RUN go get gopkg.in/yaml.v2
