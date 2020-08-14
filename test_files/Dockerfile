@@ -1,6 +1,6 @@
 #  This is a docker image for the helmsman test container
 #  It can be pulled from gofunky/helmsman:test
-FROM gofunky/kubernetes:v1.11.2 as kube
+FROM gofunky/kubernetes:v1.18.8 as kube
 
 FROM golang:1.10.3-alpine3.7 as builder
 
