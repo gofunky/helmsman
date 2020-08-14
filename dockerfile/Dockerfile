@@ -1,4 +1,4 @@
-FROM gofunky/kubernetes:v1.11.2 as kube
+FROM gofunky/kubernetes:v1.18.8 as kube
 
 FROM golang:1.10.3 as builder
 WORKDIR /go/src/
