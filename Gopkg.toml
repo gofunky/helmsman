@@ -23,7 +23,7 @@
 
 [[constraint]]
   name = "cloud.google.com/go"
-  version = "0.26.0"
+  version = "0.65.0"
 
 [[constraint]]
   name = "github.com/BurntSushi/toml"
